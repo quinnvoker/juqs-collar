@@ -1,9 +1,5 @@
 $fn = 300;
 
-base_w = 37.16; //not sure why slightly asym, but both collars i measured had this
-base_l = 37.1;
-base_h = 2.8;
-base_r = 8;
 collar_r = 34.7/2;
 collar_h = 8.7; // short collar: 8.7, full: 18
 collar_bezel = 1;
@@ -27,7 +23,10 @@ module collar (h, r, bezel = 0) {
     }
 }
 
-module base (w, l, h, r) {
+module base (size = [37.16, 37.1, 2.8], r = 8) {
+    w = size.x;
+    l = size.y;
+    h = size.z;
     corner_offset = [w/2 - r, l/2 - r];
     hull() {
         translate([corner_offset.x, corner_offset.y, 0]) {
@@ -173,14 +172,14 @@ module nroct_hollow (h, r, corner_r, slope) {
 difference() {
 difference() {
 union() {
-    base(base_w, base_l, base_h, base_r);
+    base();
 collar(collar_h, collar_r, collar_bezel);
 };
 //sq_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
 //oct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_circle);
-soct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
+//soct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
 //roct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
-//nroct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
+nroct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
 };
 
 /*
