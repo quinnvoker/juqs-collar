@@ -1,8 +1,5 @@
 $fn = 300;
 
-collar_r = 34.7/2;
-collar_h = 8.7; // short collar: 8.7, full: 18
-collar_bezel = 1;
 collar_inner_corner_r = 9/2; //should roughly match shaft for best feel
 collar_inner_r = 13.2/2; //inner radius at bottom of official collar is 13.2
 
@@ -14,7 +11,12 @@ grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
 
-module collar (h, r, bezel = 0) {
+module collar (full = false, bezel = 1) {
+    h = 8.7;
+    r = 34.7/2;
+    if(full) {
+      h = 18;
+    }
     union() {
         cylinder(h=h - bezel, r=r);
         translate([0,0,h - bezel]) {
@@ -173,7 +175,7 @@ difference() {
 difference() {
 union() {
     base();
-collar(collar_h, collar_r, collar_bezel);
+    collar(false);
 };
 //sq_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
 //oct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_circle);
