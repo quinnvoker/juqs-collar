@@ -55,7 +55,7 @@ module base (size = [37.16, 37.1, 2.8], r = 8) {
     };
 };
 
-module ci_pivot (collar_h = 8.7, throw, shaft_r, depth) {
+module ci_pivot (throw, shaft_r, depth) {
   h = 50;
   top_r = h * tan(throw) + shaft_r;
   translate([0,0,-depth])
@@ -94,13 +94,13 @@ module sq_pivot (throw, shaft_r, depth, sharpness = 1) {
     } 
 }
 
-module sq_hollow (h, r, corner_r, slope) {
+module sq_hollow (corner_r, slope) {
     rotate([0,0,45]) {
         sq_pivot(slope, corner_r, pivot_depth);
     }
 };
 
-module oct_hollow (h, r, corner_r, slope) {
+module oct_hollow (corner_r, slope) {
     hull(){
         rotate([0,0,45]) {
             sq_pivot(slope, corner_r, pivot_depth);
@@ -109,7 +109,7 @@ module oct_hollow (h, r, corner_r, slope) {
     }
 };
 
-module soct_hollow (h, r, corner_r, slope) {
+module soct_hollow (corner_r, slope) {
     hull(){
         rotate([0,0,45]) {
             sq_pivot(slope - 2, corner_r, pivot_depth, 2.5);
@@ -118,7 +118,7 @@ module soct_hollow (h, r, corner_r, slope) {
     }
 };
 
-module roct_hollow (h, r, corner_r, slope) {
+module roct_hollow (corner_r, slope) {
     union(){
         rotate([0,0,45]) {
             sq_pivot(slope - 4, corner_r, pivot_depth);
@@ -127,7 +127,7 @@ module roct_hollow (h, r, corner_r, slope) {
     }
 };
 
-module nroct_hollow (h, r, corner_r, slope) {
+module nroct_hollow (corner_r, slope) {
     diag_r = corner_r * 1.075;
     union(){
         rotate([0,0,45]) {
@@ -149,12 +149,12 @@ union() {
     base();
     collar(false);
 };
-sq_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
-//oct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_circle);
-//soct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
-//roct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
-//nroct_hollow(collar_h, collar_inner_r, collar_inner_corner_r, max_throw_square);
-//ci_pivot(collar_h, max_throw_circle, collar_inner_corner_r, pivot_depth);
+//sq_hollow(collar_inner_corner_r, max_throw_square);
+//oct_hollow(collar_inner_corner_r, max_throw_circle);
+//soct_hollow(collar_inner_corner_r, max_throw_square);
+//roct_hollow(collar_inner_corner_r, max_throw_square);
+//nroct_hollow(collar_inner_corner_r, max_throw_square);
+ci_pivot(max_throw_circle, collar_inner_corner_r, pivot_depth);
 };
 /*
 translate([0, -13, -0.1]) {
