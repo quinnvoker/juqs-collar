@@ -111,18 +111,18 @@ module oct_hollow (corner_r, slope) {
 module soct_hollow (corner_r, slope) {
     hull(){
         rotate([0,0,45]) {
-            sq_pivot(slope - 2, corner_r, pivot_depth, 2.5);
+            sq_pivot(slope + 2, corner_r, pivot_depth, 4);
         }
-        sq_pivot(slope - 4, corner_r, pivot_depth, 2.5);
+        sq_pivot(slope, corner_r, pivot_depth, 4);
     }
 };
 
 module roct_hollow (corner_r, slope) {
     union(){
         rotate([0,0,45]) {
-            sq_pivot(slope - 4, corner_r, pivot_depth);
+            sq_pivot(slope, corner_r, pivot_depth);
         }
-        sq_pivot(slope - 4, corner_r, pivot_depth);
+        sq_pivot(slope, corner_r, pivot_depth);
     }
 };
 
@@ -130,9 +130,9 @@ module nroct_hollow (corner_r, slope) {
     //diag_r = corner_r * 1.075;
     union(){
         rotate([0,0,45]) {
-            sq_pivot(slope - 3, corner_r, pivot_depth, 1, 1);
+            sq_pivot(slope + 1, corner_r, pivot_depth, 1, 1);
         }
-        sq_pivot(slope - 4, corner_r, pivot_depth);
+        sq_pivot(slope, corner_r, pivot_depth);
     }
 };
 
@@ -151,9 +151,9 @@ union() {
 };
 //sq_hollow(collar_inner_corner_r, max_throw_square);
 //oct_hollow(collar_inner_corner_r, max_throw_circle);
-//soct_hollow(collar_inner_corner_r, max_throw_square);
-//roct_hollow(collar_inner_corner_r, max_throw_square);
-nroct_hollow(collar_inner_corner_r, max_throw_square);
+//soct_hollow(collar_inner_corner_r, max_throw_circle);
+//roct_hollow(collar_inner_corner_r, max_throw_circle);
+nroct_hollow(collar_inner_corner_r, max_throw_circle);
 //ci_pivot(max_throw_circle, collar_inner_corner_r, pivot_depth);
 };
 };
