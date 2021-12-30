@@ -1,4 +1,4 @@
-$fn = 30;
+$fn = 100;
 
 collar_r = 34.7/2;
 collar_h = 8.7; // short collar: 8.7, full: 18
@@ -58,11 +58,10 @@ module base (size = [37.16, 37.1, 2.8], r = 8) {
 module ci_pivot (throw, shaft_r, depth) {
   h = 50;
   top_r = h * tan(throw) + shaft_r;
-  translate([0,0,-depth])
-    cylinder(h = h, r1 = shaft_r, r2 = top_r);
+  cylinder(h = h, r1 = shaft_r, r2 = top_r);
 }
 
-module sq_pivot (throw, shaft_r, depth, sharpness = 1) {  
+module sq_pivot (throw, shaft_r, depth, sharpness = 1, throw_extend = 0) {  
     h = 50;
     corner_r = shaft_r / sharpness;
     corner_offset = corner_r * (sharpness - 1);
@@ -70,23 +69,23 @@ module sq_pivot (throw, shaft_r, depth, sharpness = 1) {
         hull() {
             translate([corner_offset,0,0]){
                 rotate([0,throw,0]){
-                    cylinder(h = h, r = corner_r);
+                    ci_pivot(throw = throw_extend, shaft_r = corner_r, depth = depth);
                 }
             }
             translate([-corner_offset,0,0]){
                 rotate([0,-throw,0]){
-                    cylinder(h = h, r = corner_r);
+                    ci_pivot(throw = throw_extend, shaft_r = corner_r, depth = depth);
                 }
             }
             rotate([0,0,90]){
                 translate([corner_offset,0,0]){
                     rotate([0,throw,0]){
-                        cylinder(h = h, r = corner_r);
+                        ci_pivot(throw = throw_extend, shaft_r = corner_r, depth = depth);
                     }
                 }
                 translate([-corner_offset,0,0]){
-                    rotate([0,-throw,0]){
-                        cylinder(h = h, r = corner_r);
+                    rotate([0,-throw,0]){    
+                        ci_pivot(throw = throw_extend, shaft_r = corner_r, depth = depth);
                     }
                 }
             }
@@ -128,10 +127,10 @@ module roct_hollow (corner_r, slope) {
 };
 
 module nroct_hollow (corner_r, slope) {
-    diag_r = corner_r * 1.075;
+    //diag_r = corner_r * 1.075;
     union(){
         rotate([0,0,45]) {
-            sq_pivot(slope - 4, diag_r, pivot_depth);
+            sq_pivot(slope - 3, corner_r, pivot_depth, 1, 1);
         }
         sq_pivot(slope - 4, corner_r, pivot_depth);
     }
@@ -143,6 +142,7 @@ translate([0,0,-pivot_depth]){
   }
 }
 
+rotate([0,0,0]) {
 difference() {
 difference() {
 union() {
@@ -153,8 +153,9 @@ union() {
 //oct_hollow(collar_inner_corner_r, max_throw_circle);
 //soct_hollow(collar_inner_corner_r, max_throw_square);
 //roct_hollow(collar_inner_corner_r, max_throw_square);
-//nroct_hollow(collar_inner_corner_r, max_throw_square);
-ci_pivot(max_throw_circle, collar_inner_corner_r, pivot_depth);
+nroct_hollow(collar_inner_corner_r, max_throw_square);
+//ci_pivot(max_throw_circle, collar_inner_corner_r, pivot_depth);
+};
 };
 /*
 translate([0, -13, -0.1]) {
