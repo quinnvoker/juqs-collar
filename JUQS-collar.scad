@@ -26,7 +26,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
   */
-  juqs(model = OCTNR, ver = VERSION);
+  juqs(model = CIR, ver = VERSION);
 }
 
 module juqs(model, ver) {
@@ -106,6 +106,10 @@ module ci_pivot (throw, shaft_r) {
   cylinder(h = h, r1 = shaft_r, r2 = top_r);
 }
 
+module ci_bevel (throw, shaft_r, depth, b_height = 1) {
+  cylinder(h = 50, r = shaft_r + (depth + b_height) * tan(throw));
+}
+
 module sq_pivot (throw, shaft_r, depth, sharpness = 1, throw_extend = 0) {  
   h = 50;
   shaft_r = shaft_r / sharpness;
@@ -131,8 +135,10 @@ module sq_pivot (throw, shaft_r, depth, sharpness = 1, throw_extend = 0) {
 }
 
 module cir_hollow(slope, shaft_r, depth) {
-  translate([0,0,-depth])
+  translate([0,0,-depth]) {
     ci_pivot(slope, shaft_r);
+    ci_bevel(slope, shaft_r, depth);
+  }
 }
 
 module sqr_hollow (slope, shaft_r, depth) {
