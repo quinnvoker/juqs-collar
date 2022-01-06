@@ -26,7 +26,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
   */
-  juqs(model = OCTR, ver = VERSION);
+  juqs(model = OCTNR, ver = VERSION);
 }
 
 module juqs(model, ver) {
@@ -137,18 +137,18 @@ module sq_pivot (throw, shaft_r, depth, sharpness = 1, throw_extend = 0) {
 module sq_bevel (throw, shaft_r, depth, sharpness = 1, throw_extend = 0, b_height = 1) {
   h = 50;
   shaft_r = shaft_r / sharpness;
-  corner_offset = shaft_r * (sharpness - 1) + ((depth + b_height) * tan(throw + throw_extend));
+  corner_offset = shaft_r * (sharpness - 1) + ((depth + b_height) * tan(throw));
   translate([0,0,-depth]) {
     hull() {
       translate([corner_offset,0,0])
-        cylinder(h = h, r = shaft_r);
+        cylinder(h = h, r = shaft_r + (depth + b_height) * tan(throw_extend));
       translate([-corner_offset,0,0])
-        cylinder(h = h, r = shaft_r);
+        cylinder(h = h, r = shaft_r + (depth + b_height) * tan(throw_extend));
       rotate([0,0,90]) {
         translate([corner_offset,0,0])
-          cylinder(h = h, r = shaft_r);
+          cylinder(h = h, r = shaft_r + (depth + b_height) * tan(throw_extend));
         translate([-corner_offset,0,0])
-          cylinder(h = h, r = shaft_r); 
+          cylinder(h = h, r = shaft_r + (depth + b_height) * tan(throw_extend));
       }
     }
   }
@@ -208,6 +208,11 @@ module octnr_hollow (slope, shaft_r, depth) {
     rotate([0,0,45])
       sq_pivot(slope + 1, shaft_r, depth, 1, 1);
     sq_pivot(slope, shaft_r, depth);
+  }
+  union(){
+    rotate([0,0,45])
+      sq_bevel(slope + 1, shaft_r, depth, 1, 1);
+    sq_bevel(slope, shaft_r, depth);
   }
 };
 
