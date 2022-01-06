@@ -26,7 +26,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
   */
-  juqs(model = OCT, ver = VERSION);
+  juqs(model = OCTR, ver = VERSION);
 }
 
 module juqs(model, ver) {
@@ -181,6 +181,7 @@ module oct_hollow (slope, shaft_r, depth) {
   }
 };
 
+//work in progress
 module octn_hollow (slope, shaft_r, depth) {
   hull(){
     rotate([0,0,45])
@@ -194,6 +195,11 @@ module octr_hollow (slope, shaft_r, depth) {
     rotate([0,0,45])
       sq_pivot(slope, shaft_r, depth);
     sq_pivot(slope, shaft_r, depth);
+  }
+  union(){
+    rotate([0,0,45])
+      sq_bevel(slope, shaft_r, depth);
+    sq_bevel(slope, shaft_r, depth);
   }
 };
 
