@@ -185,24 +185,38 @@ module oct_hollow (slope, shaft_r, depth) {
 };
 
 //work in progress
-module octn_hollow (slope, shaft_r, depth, sharpness = 1) { 
-  shaft_r = shaft_r / sharpness;
-  cardinal = shaft_r * (sharpness - 1) + depth * tan(slope);
-  corner = shaft_r * (sharpness - 1) + depth * tan(slope / 1.3);
-  octagon = [
-    [cardinal,0],
-    [corner,corner],
-    [0,cardinal],
-    [-corner,corner],
-    [-cardinal,0],
-    [-corner,-corner],
-    [0,-cardinal],
-    [corner,-corner],
-  ];
+module octn_hollow (slope, shaft_r, depth) { 
+  module octagon(slope, height) {
+    cardinal = height * tan(slope);
+    corner = height * tan(slope / 1.2);
+    octagon = [
+      [cardinal,0],
+      [corner,corner],
+      [0,cardinal],
+      [-corner,corner],
+      [-cardinal,0],
+      [-corner,-corner],
+      [0,-cardinal],
+      [corner,-corner],
+    ];
+
+    polygon(points=octagon);
+  };
+
+  hull(){
+    translate([0,0,-0.1])
+    linear_extrude(0.01)
     minkowski(){ 
-      polygon(points=octagon);
+      octagon(slope, depth);
       circle(shaft_r);
     }
+    translate([0,0,collar_h])
+    linear_extrude(0.01)
+    minkowski(){ 
+      octagon(slope, depth + collar_h);
+      circle(shaft_r);
+    }
+  }
 };
 
 module octr_hollow (slope, shaft_r, depth) {
