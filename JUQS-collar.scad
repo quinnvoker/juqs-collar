@@ -1,4 +1,4 @@
-$fn = 360;
+$fn = 32;
 
 collar_r = 34.7/2;
 collar_h = 8.7; // short collar: 8.7, full: 18
@@ -26,7 +26,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
   */
-  juqs(model = OCTNR, ver = VERSION);
+  juqs(model = OCTN, ver = VERSION);
 }
 
 module juqs(model, ver) {
@@ -64,6 +64,7 @@ module juqs(model, ver) {
       };
     };
   };
+  //oct_hollow(cardinal_throw, shaft_r, pivot_depth);
 };
 
 module shaft(r, depth, rotation) {
@@ -174,20 +175,34 @@ module oct_hollow (slope, shaft_r, depth) {
       sq_pivot(slope, shaft_r, depth);
     sq_pivot(slope, shaft_r, depth);
   }
+  /*
   hull() {
     rotate([0,0,45])
       sq_bevel(slope, shaft_r, depth);
     sq_bevel(slope, shaft_r, depth);
   }
+  */
 };
 
 //work in progress
-module octn_hollow (slope, shaft_r, depth) {
-  hull(){
-    rotate([0,0,45])
-      sq_pivot(slope + 3, shaft_r, depth, 3);
-    sq_pivot(slope, shaft_r, depth, 3);
-  }
+module octn_hollow (slope, shaft_r, depth, sharpness = 1) { 
+  shaft_r = shaft_r / sharpness;
+  cardinal = shaft_r * (sharpness - 1) + depth * tan(slope);
+  corner = shaft_r * (sharpness - 1) + depth * tan(slope / 1.3);
+  octagon = [
+    [cardinal,0],
+    [corner,corner],
+    [0,cardinal],
+    [-corner,corner],
+    [-cardinal,0],
+    [-corner,-corner],
+    [0,-cardinal],
+    [corner,-corner],
+  ];
+    minkowski(){ 
+      polygon(points=octagon);
+      circle(shaft_r);
+    }
 };
 
 module octr_hollow (slope, shaft_r, depth) {
