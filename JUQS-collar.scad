@@ -1,3 +1,5 @@
+include<round_gates.scad>
+
 $fn = 32;
 
 collar_r = 34.7/2;
@@ -12,7 +14,7 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V1A";
+VERSION = "V1B";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -26,7 +28,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
   */
-  juqs(model = OCTN, ver = VERSION);
+  juqs(model = OCTNR, ver = VERSION);
 }
 
 module juqs(model, ver) {
@@ -38,17 +40,20 @@ module juqs(model, ver) {
           collar(collar_h);
         };
         if(model == CIR)
-          cir_hollow(cardinal_throw, shaft_r, pivot_depth);
+          translate([0,0,-pivot_depth])
+            cir_gate(cardinal_throw, shaft_r);
         if(model == SQR)
           sqr_hollow(max_throw_square, shaft_r, pivot_depth);
         if(model == OCT)
           oct_hollow(cardinal_throw, shaft_r, pivot_depth);
         if(model == OCTR)
-          octr_hollow(cardinal_throw, shaft_r, pivot_depth);
+          translate([0,0,-pivot_depth])
+            octr_gate(cardinal_throw, shaft_r);
         if(model == OCTN)
           octn_hollow(cardinal_throw, shaft_r, pivot_depth, 10);
         if(model == OCTNR)
-          octnr_hollow(cardinal_throw, shaft_r, pivot_depth);
+          translate([0,0,-pivot_depth])
+            octnr_gate(cardinal_throw, shaft_r);
       };
       translate([0, -11, -0.1]) {
         modtext = str("JUQS-",model);
@@ -175,11 +180,13 @@ module oct_hollow (slope, shaft_r, depth) {
       sq_pivot(slope, shaft_r, depth);
     sq_pivot(slope, shaft_r, depth);
   }
+  /*
   hull() {
     rotate([0,0,45])
       sq_bevel(slope, shaft_r, depth);
     sq_bevel(slope, shaft_r, depth);
   }
+  */
 };
 
 //work in progress
@@ -187,7 +194,7 @@ module octn_hollow (slope, shaft_r, depth, sharpness = 1) {
   module octagon(slope, shaft_r, height, sharpness) {
     shaft_r = shaft_r / sharpness;
     cardinal = shaft_r * (sharpness - 1) + (height * tan(slope));
-    corner = (shaft_r * (sharpness - 1) + (height * tan(slope * 1.3))) / sqrt(2);
+    corner = shaft_r * (sharpness - 1) + (height * tan(slope / 1.2));
     octagon = [
       [cardinal,0],
       [corner,corner],

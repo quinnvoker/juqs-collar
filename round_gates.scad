@@ -9,14 +9,14 @@ module pivot (throw, shaft_r) {
 module pivot_square (throw, shaft_r, throw_extend = 0) {  
   hull() {
     rotate([0,throw,0])
-      pivot(gate_height, throw_extend, shaft_r);
+      pivot(throw_extend, shaft_r);
     rotate([0,-throw,0])
-      pivot(gate_height, throw_extend, shaft_r);
+      pivot(throw_extend, shaft_r);
     rotate([0,0,90]) {
       rotate([0,throw,0])
-        pivot(gate_height, throw_extend, shaft_r);
+        pivot(throw_extend, shaft_r);
       rotate([0,-throw,0])
-        pivot(gate_height, throw_extend, shaft_r);
+        pivot(throw_extend, shaft_r);
     }
   };
 }
