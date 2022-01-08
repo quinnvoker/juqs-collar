@@ -20,6 +20,17 @@ oct_poly = let(corner = 1 / sqrt(2))[
   [corner, -corner],
 ];
 
+octn_poly = let(corner = 1 / sqrt(2 / 1.2))[
+  [1,0],
+  [corner, corner],
+  [0,1],
+  [-corner, corner],
+  [-1,0],
+  [-corner, -corner],
+  [0,-1],
+  [corner, -corner],
+];
+
 function scale_xy_z(m, xy, z) = [ for (i = [0 : len(m) - 1]) [m[i].x * xy, m[i].y * xy, z]];
 
 function throw_end(throw) = gate_height * tan(throw);
@@ -40,7 +51,7 @@ module shape_gate (shape, throw, shaft_r, sharpness = 1) {
 echo(throw_points(sq_poly, 15));
 echo(throw_faces(throw_points(sq_poly, 15)));
 
-points = throw_points(oct_poly, 15);
+points = throw_points(octn_poly, 15);
 faces = throw_faces(points);
 
 minkowski() {
