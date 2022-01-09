@@ -37,8 +37,8 @@ function add_z(z, m) = [ for (i = m) concat(i, z) ];
 
 function throw_end(throw, base_offset) = base_offset + gate_height * tan(throw);
 
-function throw_polygons(shape, throw, base_offset = 0) = [
-  add_z(0, scale_xy(max(base_offset,0), shape)), 
+function throw_polygons(shape, throw, base_offset = 0) = let(b_scale = base_offset < 0 ? 1 : base_offset)[ 
+  add_z(0, scale_xy(b_scale, shape)), 
   add_z(gate_height, scale_xy(throw_end(throw, base_offset), shape))
 ];
 
@@ -57,20 +57,27 @@ function throw_faces(points) = let(length = len(points), half = len(points) / 2)
 function lerp(a,b,t) = a + (b - a) * t;
 
 module shape_gate (shape, throw, shaft_r, sharpness = 0) {
-  normalized_sharpness = sharpness >= 0 ? sharpness : sharpness; 
-  sharpness = lerp(1, shaft_r, normalized_sharpness);
+  sharpness = lerp(1, shaft_r, max(0, min(sharpness, 1)));
 
-  corner_r = shaft_r / abs(sharpness);
+  corner_r = shaft_r / sharpness;
   corner_offset = corner_r * (sharpness - 1);
 
   points = throw_points(shape, throw, corner_offset);
+  echo(points);
+  echo(corner_offset);
+  echo(abs(corner_offset) * tan(throw));
+
+  difference(){
   minkowski(){
     polyhedron(points, throw_faces(points));
     cylinder(1, corner_r);
   }
+  translate([0,0,gate_height + 16])
+    cube(32, true);
+  }
 }
 
-sharpness = lerp(0, -0.19, $t);
+sharpness = sin(180 * $t);
 echo(sharpness);
 
-shape_gate(octn_poly, 10, 9 / 2, sharpness);
+shape_gate(sq_poly, 10, 9 / 2, sharpness);
