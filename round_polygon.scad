@@ -24,17 +24,14 @@ function add_radius(shape, rad) = grow(shape, rad/cos(180/len(shape)));
 
 function lerp(a,b,t) = a + (b - a) * t;
 
-module round_poly(shape, radius, sharpness = 0){
+module round_poly(shape, radius, size = 0, sharpness = 0){
     corner_r = lerp(radius, 0, sharpness);
     corner_offset = lerp(0, radius, sharpness);
     
     minkowski(){
-        polygon(add_radius(scale_xy(shape,0),corner_offset));
+        polygon(add_radius(scale_xy(shape,size),corner_offset));
         circle(max(corner_r, 0.0001));
     }
 }
 
-
-radius = 1;
-
-round_poly(oct,radius, $t);
+round_poly(oct, radius, 4, 0);
