@@ -1,4 +1,4 @@
-use<math.scad>;
+include<math.scad>;
 
 module round_poly(shape, radius, size = 0, sharpness = 0){
   function grow(s, m) = [ for (i = s) i + normalize(i) * m];
