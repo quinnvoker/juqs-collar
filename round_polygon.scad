@@ -1,10 +1,20 @@
 $fn=32;
 
-scale = 1;
-card = scale;
-corn = scale / sqrt(2);
+card = 1;
+corn = 1 / sqrt(2);
 
-function scale_xy(xy, m) = [ for (i = m) [i.x * xy, i.y * xy]];
+oct = [
+    [card,0],
+    [corn,corn],
+    [0,card],
+    [-corn,corn],
+    [-card,0],
+    [-corn,-corn],
+    [0,-card],
+    [corn,-corn]
+];
+
+function scale_xy(xy, m) = let(nz_xy = sign(xy == 0 ? 1 : xy) * max(abs(xy), 0.0000001)) [ for (i = m) [i.x * nz_xy, i.y * nz_xy]];
 
 function normalize(vec) = vec / norm(vec);
 
@@ -20,22 +30,12 @@ module round_poly(shape, radius, sharpness = 0){
     
     
     minkowski(){
-        polygon(add_radius(shape,corner_offset));
+        polygon(add_radius(scale_xy(0, shape),corner_offset));
         circle(max(corner_r, 0.0001));
     }
 }
 
-oct = [
-    [card,0],
-    [corn,corn],
-    [0,card],
-    [-corn,corn],
-    [-card,0],
-    [-corn,-corn],
-    [0,-card],
-    [corn,-corn]
-];
 
-radius = 1;
+radius = 3;
 
-round_poly(oct,radius, 1);
+round_poly(oct,radius, $t);
