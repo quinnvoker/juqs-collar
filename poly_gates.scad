@@ -56,28 +56,20 @@ function throw_faces(points) = let(length = len(points), half = len(points) / 2)
 
 function lerp(a,b,t) = a + (b - a) * t;
 
-module shape_gate (shape, throw, shaft_r, sharpness = 0) {
-  sharpness = lerp(1, shaft_r, max(0, min(sharpness, 1)));
-
-  corner_r = shaft_r / sharpness;
-  corner_offset = corner_r * (sharpness - 1);
+module shape_gate (shape, throw, shaft_r, sharpness = 1) {
+  corner_r = shaft_r * sharpness;
+  corner_offset = shaft_r - corner_r;
 
   points = throw_points(shape, throw, corner_offset);
-  echo(points);
-  echo(corner_offset);
-  echo(abs(corner_offset) * tan(throw));
-
-  difference(){
+  
   minkowski(){
     polyhedron(points, throw_faces(points));
     cylinder(1, corner_r);
   }
-  translate([0,0,gate_height + 16])
-    cube(32, true);
-  }
 }
 
-sharpness = sin(180 * $t);
+sharpness = $t;
 echo(sharpness);
 
-shape_gate(sq_poly, 10, 9 / 2, sharpness);
+shape_gate(sq_poly, 10, 9 / 2, 1);
+  
