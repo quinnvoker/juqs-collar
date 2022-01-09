@@ -57,7 +57,8 @@ function throw_faces(points) = let(length = len(points), half = len(points) / 2)
 function lerp(a,b,t) = a + (b - a) * t;
 
 module shape_gate (shape, throw, shaft_r, sharpness = 0) {
-  sharpness = lerp(1, shaft_r, sharpness);
+  normalized_sharpness = sharpness >= 0 ? sharpness : sharpness; 
+  sharpness = lerp(1, shaft_r, normalized_sharpness);
 
   corner_r = shaft_r / abs(sharpness);
   corner_offset = corner_r * (sharpness - 1);
@@ -69,7 +70,7 @@ module shape_gate (shape, throw, shaft_r, sharpness = 0) {
   }
 }
 
-sharpness = lerp(-1, -0.6, $t);
+sharpness = lerp(0, -0.19, $t);
 echo(sharpness);
 
 shape_gate(octn_poly, 10, 9 / 2, sharpness);
