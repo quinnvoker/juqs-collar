@@ -7,10 +7,10 @@ $fn = 32;
 collar_r = 34.7/2;
 short_collar = 8.7;
 full_collar = 18;
-shaft_r = 9/2; //should roughly match shaft for best feel
-//inner radius at bottom of official collar is 13.2
+shaft_r = (9/2)/cos(180/$fn);
+//shaft_r = 9/2;
 
-cardinal_throw = 10;
+cardinal_throw = 9.5;
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
@@ -72,20 +72,21 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
       };
     };
   };
-  //oct_hollow(throw, shaft_r, pivot_depth);
 };
 
 module bevels(collar_height, size = 0.8){
-  translate([0,0,-0.1])
-    linear_extrude(size + 0.1) 
-      projection(cut = true)
-        translate([0,0,-size])
-          children();
-  translate([0,0,collar_height - size])
-    linear_extrude(height = size + 0.1, scale = 1 + 0.125 * (size + 0.1))
-      projection(cut = true)
-        translate([0,0,-(collar_height - size)])
-          children();
+  if(size > 0) {
+    translate([0,0,-0.1])
+      linear_extrude(size + 0.1) 
+        projection(cut = true)
+          translate([0,0,-size])
+            children();
+    translate([0,0,collar_height - size])
+      linear_extrude(height = size + 0.1, scale = 1 + 0.125 * (size + 0.1))
+        projection(cut = true)
+          translate([0,0,-(collar_height - size)])
+            children();
+  }
   children();
 }
 
