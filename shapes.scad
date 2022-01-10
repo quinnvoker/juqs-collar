@@ -1,8 +1,8 @@
-sqr_poly = let(corner = 1 / sqrt(2)) [
-  [-corner, -corner],
-  [corner, -corner],
-  [corner, corner],
-  [-corner, corner],
+sqr_poly = let() [
+  [-1, -1],
+  [1, -1],
+  [1, 1],
+  [-1, 1],
 ];
 
 oct_poly = let(corner = 1 / sqrt(2))[
