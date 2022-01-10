@@ -11,7 +11,6 @@ shaft_r = 9/2; //should roughly match shaft for best feel
 //inner radius at bottom of official collar is 13.2
 
 cardinal_throw = 10;
-max_throw_square = 14;
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
@@ -29,12 +28,12 @@ OCTNR = "OCTNR";
 rotate([0,0,0]){
   /*
    * OCTNR corner test (seems to also match OCTN, nice!)
-   * shaft(shaft_r, pivot_depth, [cardinal_throw+1.95,0,45]);
+   * shaft(shaft_r, pivot_depth, [throw+1.95,0,45]);
   */
-  juqs(model = SQR, ver = VERSION, collar_h = short_collar);
+  juqs(model = OCTNR, ver = VERSION, collar_h = short_collar);
 }
 
-module juqs(model, ver, collar_h = short_collar) {
+module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
   rotate([0,0,0]) {
     difference() {
       difference() {
@@ -42,20 +41,20 @@ module juqs(model, ver, collar_h = short_collar) {
           base();
           collar(collar_h);
         };
-        bevels(collar_h) {
+        bevels(collar_h, 0.6) {
           translate([0,0,-pivot_depth]){
             if(model == CIR)
-              cir_gate(cardinal_throw, shaft_r);
+              cir_gate(throw, shaft_r);
             if(model == SQR)
-              shape_gate(sqr_poly, cardinal_throw, shaft_r);
+              shape_gate(sqr_poly, throw, shaft_r);
             if(model == OCT)
-              shape_gate(oct_poly, cardinal_throw, shaft_r);
+              shape_gate(oct_poly, throw, shaft_r, 0.5);
             if(model == OCTR)
-              octr_gate(cardinal_throw, shaft_r);
+              octr_gate(throw, shaft_r);
             if(model == OCTN)
-              shape_gate(octn_poly, cardinal_throw, shaft_r);
+              shape_gate(octn_poly, throw, shaft_r, 0.5);
             if(model == OCTNR)
-              octnr_gate(cardinal_throw, shaft_r);
+              octnr_gate(throw, shaft_r);
           }
         }
       };
@@ -73,14 +72,19 @@ module juqs(model, ver, collar_h = short_collar) {
       };
     };
   };
-  //oct_hollow(cardinal_throw, shaft_r, pivot_depth);
+  //oct_hollow(throw, shaft_r, pivot_depth);
 };
 
-module bevels(pivot_depth, collar_height, size = 1){
+module bevels(collar_height, size = 0.8){
   translate([0,0,-0.1])
     linear_extrude(size + 0.1) 
       projection(cut = true)
         translate([0,0,-size])
+          children();
+  translate([0,0,collar_height - size])
+    linear_extrude(height = size + 0.1, scale = 1 + 0.125 * (size + 0.1))
+      projection(cut = true)
+        translate([0,0,-(collar_height - size)])
           children();
   children();
 }
@@ -110,11 +114,11 @@ module base (size = [37.16, 37.1, 2.8], r = 8) {
 };
 
 // use h=18 for full collar
-module collar (h = 8.7, r = (34.7/2), bezel = 1) {
+module collar (h = 8.7, r = (34.7/2), bevel = 1) {
   union() {
-    cylinder(h=h - bezel, r=r);
-    translate([0,0,h - bezel]) {
-      cylinder(h=bezel, r1 = r, r2= r - bezel);
+    cylinder(h=h - bevel, r=r);
+    translate([0,0,h - bevel]) {
+      cylinder(h=bevel, r1 = r, r2= r - bevel);
     }
   }
 }
