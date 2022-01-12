@@ -16,7 +16,7 @@ oct_poly = let(corner = 1 / sqrt(2))[
   [-1,0],
 ];
 
-octn_poly = let(corner = 1 / sqrt(2 / 1.2))[
+octn_poly = let(corner = 1 / sqrt(2 / 1.4))[
   [-corner, -corner],
   [0,-1],
   [corner, -corner],

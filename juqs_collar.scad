@@ -2,7 +2,7 @@ include<round_gates.scad>;
 include<shape_gate.scad>;
 include<shapes.scad>;
 
-$fn = 32;
+$fn = 100;
 
 collar_r = 34.7/2;
 short_collar = 8.7;
@@ -10,7 +10,7 @@ full_collar = 18;
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
-cardinal_throw = 9.5;
+cardinal_throw = 10;
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
@@ -30,7 +30,7 @@ rotate([0,0,0]){
    * OCTNR corner test (seems to also match OCTN, nice!)
    * shaft(shaft_r, pivot_depth, [throw+1.95,0,45]);
   */
-  juqs(model = OCTNR, ver = VERSION, collar_h = short_collar);
+  juqs(model = OCTNR, ver = VERSION, collar_h = full_collar);
 }
 
 module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
