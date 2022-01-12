@@ -16,7 +16,7 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V1B";
+VERSION = "V1C";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -25,13 +25,7 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 OCTNR = "OCTNR";
 
-rotate([0,0,0]){
-  /*
-   * OCTNR corner test (seems to also match OCTN, nice!)
-   * shaft(shaft_r, pivot_depth, [throw+1.95,0,45]);
-  */
-  juqs(model = OCTNR, ver = VERSION, collar_h = full_collar);
-}
+juqs(model = OCTNR, ver = VERSION, collar_h = short_collar);
 
 module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
   rotate([0,0,0]) {

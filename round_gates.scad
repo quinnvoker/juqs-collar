@@ -34,7 +34,7 @@ module octr_gate (throw, shaft_r) {
 module octnr_gate (throw, shaft_r) {
   union(){
     rotate([0,0,45])
-      pivot_square(throw + 1, shaft_r, 1);
+      pivot_square(throw, shaft_r, 1.5);
     pivot_square(throw, shaft_r);
   }
 };
