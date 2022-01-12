@@ -35,7 +35,7 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
           base();
           collar(collar_h);
         };
-        bevels(collar_h, 0.6) {
+        bevels(collar_h, 1.8, 0.6) {
           translate([0,0,-pivot_depth]){
             if(model == CIR)
               cir_gate(throw, shaft_r);
@@ -68,17 +68,19 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
   };
 };
 
-module bevels(collar_height, size = 0.8){
-  if(size > 0) {
+module bevels(collar_height, b_size = 0.8, t_size = 0.8){
+  if(b_size > 0) {
     translate([0,0,-0.1])
-      linear_extrude(size + 0.1) 
+      linear_extrude(b_size + 0.1) 
         projection(cut = true)
-          translate([0,0,-size])
+          translate([0,0,-b_size])
             children();
-    translate([0,0,collar_height - size])
-      linear_extrude(height = size + 0.1, scale = 1 + 0.125 * (size + 0.1))
+  }
+  if(t_size > 0) {
+    translate([0,0,collar_height - t_size])
+      linear_extrude(height = t_size + 0.1, scale = 1 + 0.125 * (t_size + 0.1))
         projection(cut = true)
-          translate([0,0,-(collar_height - size)])
+          translate([0,0,-(collar_height - t_size)])
             children();
   }
   children();
