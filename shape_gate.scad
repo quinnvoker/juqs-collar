@@ -6,7 +6,7 @@ include<round_poly.scad>;
 
 module shape_gate (shape, throw, shaft_r, sharpness = 0) {
   function throw_travel(throw) = gate_height * tan(throw);
-  
+
   hull(){
     linear_extrude(0.1)
       round_poly(shape, shaft_r, 0, sharpness);

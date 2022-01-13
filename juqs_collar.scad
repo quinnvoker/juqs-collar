@@ -10,11 +10,12 @@ full_collar = 18;
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
-cardinal_throw = 10;
+cardinal_throw = 9.6;
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
-pivot_depth = grommet_dist + grommet_depth / 2;
+pivot_fix = 1; // amount to lower hollow pivot, to  prevent hitting low
+pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
 VERSION = "V1C";
 
@@ -25,7 +26,8 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 OCTNR = "OCTNR";
 
-juqs(model = OCTNR, ver = VERSION, collar_h = short_collar);
+juqs(model = OCTN, ver = VERSION, collar_h = short_collar);
+//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw,0]);
 
 module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
   rotate([0,0,0]) {
@@ -87,7 +89,7 @@ module bevels(collar_height, b_size = 0.8, t_size = 0.8){
 }
 
 module shaft(r, depth, rotation) {
-  translate([0,0,-pivot_depth]){
+  translate([0,0,-depth]){
     rotate(rotation)
       cylinder(h = 100, r = shaft_r);
   }
