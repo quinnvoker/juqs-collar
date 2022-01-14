@@ -10,14 +10,14 @@ full_collar = 18;
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
-cardinal_throw = 9.6;
+cardinal_throw = 9.45;
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
-pivot_fix = 1; // amount to lower hollow pivot, to  prevent hitting low
+pivot_fix = 1.7; // amount to lower hollow pivot, to  prevent hitting low
 pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
-VERSION = "V1C";
+VERSION = "V1D";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -26,8 +26,9 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 OCTNR = "OCTNR";
 
-juqs(model = OCTN, ver = VERSION, collar_h = short_collar);
-//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw,0]);
+juqs(model = CIR, ver = VERSION, collar_h = full_collar);
+//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw * sqrt(2) + 0.4, 45]);
+//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw + 0.4, 0]);
 
 module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
   rotate([0,0,0]) {
@@ -37,7 +38,7 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
           base();
           collar(collar_h);
         };
-        bevels(collar_h, 1.8, 0.6) {
+        bevels(collar_h, 1.6, 0.5) {
           translate([0,0,-pivot_depth]){
             if(model == CIR)
               cir_gate(throw, shaft_r);
