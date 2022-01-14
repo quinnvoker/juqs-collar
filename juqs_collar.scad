@@ -5,8 +5,10 @@ include<shapes.scad>;
 $fn = 100;
 
 collar_r = 34.7/2;
-short_collar = 8.7;
-full_collar = 18;
+//short_collar = 8.7;
+short_collar = [8.7, [1.6, 0.5]];
+//full_collar = 18;
+full_collar = [18, [4.6, 0.5]];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
@@ -17,7 +19,7 @@ grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_fix = 1.7; // amount to lower hollow pivot, to  prevent hitting low
 pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
-VERSION = "V1D";
+VERSION = "V1G";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -26,11 +28,13 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 OCTNR = "OCTNR";
 
-juqs(model = CIR, ver = VERSION, collar_h = full_collar);
+juqs(model = OCTN, ver = VERSION, collar = short_collar);
 //shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw * sqrt(2) + 0.4, 45]);
 //shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw + 0.4, 0]);
 
-module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
+module juqs(model, ver, collar = short_collar, throw = cardinal_throw) {
+  collar_h = collar[0];
+  bevel = collar[1];
   rotate([0,0,0]) {
     difference() {
       difference() {
@@ -38,7 +42,7 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
           base();
           collar(collar_h);
         };
-        bevels(collar_h, 1.6, 0.5) {
+        bevels(collar_h, bevel[0], bevel[1]) {
           translate([0,0,-pivot_depth]){
             if(model == CIR)
               cir_gate(throw, shaft_r);
@@ -55,18 +59,20 @@ module juqs(model, ver, collar_h = short_collar, throw = cardinal_throw) {
           }
         }
       };
-      translate([0, -11, -0.1]) {
-        modtext = str("JUQS-",model);
-        font = "Open Sans:style=Bold";
-        fontsize = 3.75;
+      
+      modtext = str("JUQS-",ver);
+      font = "Open Sans:style=Bold";
+      fontsize = 3.75;
+      translate([0,0,-0.1]) {
         mirror([1,0,0]) {
           linear_extrude(0.7){
-            text(modtext, font=font, size=fontsize, halign = "center");
-            translate([0, -5, 0])
-              text(ver, font=font, size=fontsize, halign = "center");
+            translate([0, -11.75, 0])
+                text(modtext, font=font, size=fontsize, halign = "center");
+            translate([0, -16.75, 0])
+              text(model, font=font, size=fontsize, halign = "center");
           }
         };
-      };
+      }
     };
   };
 };
