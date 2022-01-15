@@ -12,14 +12,19 @@ full_collar = [18, [4.6, 0.5]];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
-cardinal_throw = 9.45;
+throw_types = [
+    [9.45, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
+    [9.616, "9.616"],
+    [9.75, "9.75"],
+    [10, "10"],
+];
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_fix = 1.7; // amount to lower hollow pivot, to  prevent hitting low
 pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
-VERSION = "V1G";
+VERSION = "V2.0";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -28,11 +33,12 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 OCTNR = "OCTNR";
 
-juqs(model = OCTN, ver = VERSION, collar = short_collar);
+juqs(model = CIR, ver = VERSION, collar = short_collar, throw_type= throw_types[1]);
 //shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw * sqrt(2) + 0.4, 45]);
 //shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw + 0.4, 0]);
 
-module juqs(model, ver, collar = short_collar, throw = cardinal_throw) {
+module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
+  throw = throw_type[0];
   collar_h = collar[0];
   bevel = collar[1];
   rotate([0,0,0]) {
@@ -59,17 +65,15 @@ module juqs(model, ver, collar = short_collar, throw = cardinal_throw) {
           }
         }
       };
-      
-      modtext = str("JUQS-",ver);
       font = "Open Sans:style=Bold";
-      fontsize = 3.75;
+      fontsize = 3.5;
       translate([0,0,-0.1]) {
         mirror([1,0,0]) {
           linear_extrude(0.7){
             translate([0, -11.75, 0])
-                text(modtext, font=font, size=fontsize, halign = "center");
+                text(str("JUQS ",model), font=font, size=fontsize, halign = "center");
             translate([0, -16.75, 0])
-              text(model, font=font, size=fontsize, halign = "center");
+              text(str(throw_type[1]," ",ver), font=font, size=fontsize, halign = "center");
           }
         };
       }
@@ -102,7 +106,7 @@ module shaft(r, depth, rotation) {
   }
 };
 
-module base (size = [37.16, 37.1, 2.8], r = 8) {
+module base (size = [37.18, 37.12, 2.8], r = 8) {
   w = size.x;
   l = size.y;
   h = size.z;
