@@ -14,17 +14,17 @@ shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
 throw_types = [
-  [9.45, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
-  [9.45 / sqrt(2), "S"],
-  [9.45 / sqrt(2 / 1.4), "SN"]
+  [10.75, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
+  [10.75 / sqrt(2), "S"],
+  [10.75 / sqrt(2 / 1.4), "SN"]
 ];
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
-pivot_fix = 1.7; // amount to lower hollow pivot, to  prevent hitting low
+pivot_fix = 0; // amount to lower hollow pivot, to  prevent hitting low
 pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
-VERSION = "V2.2";
+VERSION = "V2.2.1";
 
 CIR = "CIR";
 SQR = "SQR";
