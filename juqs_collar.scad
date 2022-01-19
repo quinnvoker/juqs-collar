@@ -6,17 +6,17 @@ $fn = 100;
 
 collar_r = 34.7/2;
 //short_collar = 8.7;
-short_collar = [8.7, [1.6, 0.5]];
+short_collar = [8.7, [1.6, 0.5], false];
 //full_collar = 18;
-full_collar = [18, [4.6, 0.5]];
+full_collar = [18, [4.6, 0.5], false];
+stepped_collar = [8.7, [2.6, 0.5], true];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
 throw_types = [
-    [9.45, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
-    [9.616, "9.616"],
-    [9.75, "9.75"],
-    [10, "10"],
+  [9.45, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
+  [9.45 / sqrt(2), "S"],
+  [9.45 / sqrt(2 / 1.4), "SN"]
 ];
 
 grommet_dist = 6.8; //distance the grommet sits below this component
@@ -24,31 +24,60 @@ grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_fix = 1.7; // amount to lower hollow pivot, to  prevent hitting low
 pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
 
-VERSION = "V2.0";
+VERSION = "V2.2";
 
 CIR = "CIR";
 SQR = "SQR";
 OCT = "OCT";
 OCTR = "OCTR";
 OCTN = "OCTN";
-OCTNR = "OCTNR";
+SQRN = "SQRN";
 
-juqs(model = CIR, ver = VERSION, collar = short_collar, throw_type= throw_types[1]);
-//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw * sqrt(2) + 0.4, 45]);
-//shaft(shaft_r, pivot_depth - pivot_fix, [0,cardinal_throw + 0.4, 0]);
+juqs(model = OCTN, ver = VERSION, collar = stepped_collar, throw_type= throw_types[2]);
+/*
+translate([40,0,0])
+  juqs(model = SQR, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
+translate([80,0,0])
+  juqs(model = OCT, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
+translate([0,-50,0]){
+  juqs(model = OCTR, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
+translate([40,0,0])
+    juqs(model = OCTN, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
+translate([80,0,0])
+    juqs(model = SQRN, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
+}
+translate([0,-120,0]){
+    juqs(model = CIR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+translate([40,0,0])
+  juqs(model = SQR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+translate([80,0,0])
+  juqs(model = OCT, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+translate([0,-50,0]){
+  juqs(model = OCTR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+translate([40,0,0])
+    juqs(model = OCTN, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+translate([80,0,0])
+    juqs(model = SQRN, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
+}
+}
+*/
 
 module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
   throw = throw_type[0];
   collar_h = collar[0];
   bevel = collar[1];
+  stepped = collar[2];
+  step_h = stepped ? 5.8 : 0;
   rotate([0,0,0]) {
     difference() {
       difference() {
         union() {
           base();
           collar(collar_h);
+          if(stepped)
+            collar(collar_h + step_h, 23.5 / 2);
         };
-        bevels(collar_h, bevel[0], bevel[1]) {
+        bevels(collar_h + step_h, bevel[0], bevel[1]) {
           translate([0,0,-pivot_depth]){
             if(model == CIR)
               cir_gate(throw, shaft_r);
@@ -60,18 +89,18 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
               octr_gate(throw, shaft_r);
             if(model == OCTN)
               shape_gate(octn_poly, throw, shaft_r, 0.5);
-            if(model == OCTNR)
-              octnr_gate(throw, shaft_r);
+            if(model == SQRN)
+              sqrn_gate(throw, shaft_r);
           }
         }
       };
       font = "Open Sans:style=Bold";
-      fontsize = 3.5;
+      fontsize = 3.75;
       translate([0,0,-0.1]) {
         mirror([1,0,0]) {
           linear_extrude(0.7){
             translate([0, -11.75, 0])
-                text(str("JUQS ",model), font=font, size=fontsize, halign = "center");
+              text(str("JUQS ",model), font=font, size=fontsize, halign = "center");
             translate([0, -16.75, 0])
               text(str(throw_type[1]," ",ver), font=font, size=fontsize, halign = "center");
           }
@@ -106,20 +135,40 @@ module shaft(r, depth, rotation) {
   }
 };
 
-module base (size = [37.18, 37.12, 2.8], r = 8) {
+module base (size = [37.18, 37.12, 2.8], r = 8, b=0.30) {
   w = size.x;
   l = size.y;
   h = size.z;
   corner_offset = [w/2 - r, l/2 - r];
   hull() {
-    translate([corner_offset.x, corner_offset.y, 0])
-      cylinder(h=h, r=r);  
-    translate([-corner_offset.x, corner_offset.y, 0])
-      cylinder(h=h, r=r);  
-    translate([corner_offset.x, -corner_offset.y, 0])
-      cylinder(h=h, r=r);  
-    translate([-corner_offset.x, -corner_offset.y, 0])
-      cylinder(h=h, r=r);
+    translate([corner_offset.x, corner_offset.y, 0]){
+      cylinder(b, r - b, r);
+      translate([0,0,b])
+        cylinder(h=h - b * 2, r=r);
+      translate([0,0,h - b])
+        cylinder(b, r, r - b);
+    }
+    translate([-corner_offset.x, corner_offset.y, 0]){
+      cylinder(b, r - b, r);
+      translate([0,0,b])
+        cylinder(h=h - b * 2, r=r);
+      translate([0,0,h - b])
+        cylinder(b, r, r - b);
+    }
+    translate([corner_offset.x, -corner_offset.y, 0]){
+      cylinder(b, r - b, r);
+      translate([0,0,b])
+        cylinder(h=h - b * 2, r=r);
+      translate([0,0,h - b])
+        cylinder(b, r, r - b);
+    }
+    translate([-corner_offset.x, -corner_offset.y, 0]){
+      cylinder(b, r - b, r);
+      translate([0,0,b])
+        cylinder(h=h - b * 2, r=r);
+      translate([0,0,h - b])
+        cylinder(b, r, r - b);
+    }
   };
 };
 

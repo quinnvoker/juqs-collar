@@ -31,10 +31,10 @@ module octr_gate (throw, shaft_r) {
     pivot_square(throw, shaft_r);
   }
 };
-module octnr_gate (throw, shaft_r) {
+module sqrn_gate (throw, shaft_r) {
   union(){
     rotate([0,0,45])
-      pivot_square(throw, shaft_r, 1.5);
+      pivot_square(throw, shaft_r, 1.75);
     pivot_square(throw, shaft_r);
   }
 };
