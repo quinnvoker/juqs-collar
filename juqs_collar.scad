@@ -10,21 +10,21 @@ short_collar = [8.7, [1.6, 0.5], false];
 //full_collar = 18;
 full_collar = [18, [4.6, 0.5], false];
 stepped_collar = [8.7, [2.6, 0.5], true];
+flush_collar = [8.7 + 5.8, [2.6, 0.5], false];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
 throw_types = [
-  [10.75, "B"], //as close a match as possible to original Bandit design, originally achieved in "1E" revision, and cleaned up for "1G"
-  [10.75 / sqrt(2), "S"],
-  [10.75 / sqrt(2 / 1.4), "SN"]
+  [10, "B"],
+  [10 / sqrt(2), "S"],
+  [10 / sqrt(2 / 1.4), "SN"]
 ];
 
 grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
-pivot_fix = 0; // amount to lower hollow pivot, to  prevent hitting low
-pivot_depth = grommet_dist + grommet_depth / 2 + pivot_fix;
+pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V2.2.1";
+VERSION = "V2.6";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -34,6 +34,7 @@ OCTN = "OCTN";
 SQRN = "SQRN";
 
 juqs(model = OCTN, ver = VERSION, collar = stepped_collar, throw_type= throw_types[2]);
+
 /*
 translate([40,0,0])
   juqs(model = SQR, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
