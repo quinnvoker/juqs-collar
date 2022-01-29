@@ -24,7 +24,7 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V2.6";
+VERSION = "V2.7";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -33,7 +33,7 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 SQRN = "SQRN";
 
-juqs(model = OCTN, ver = VERSION, collar = stepped_collar, throw_type= throw_types[2]);
+juqs(model = OCTN, ver = VERSION, collar = flush_collar, throw_type= throw_types[2]);
 
 /*
 translate([40,0,0])
@@ -73,7 +73,7 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
     difference() {
       difference() {
         union() {
-          base();
+          base(b=0);
           collar(collar_h);
           if(stepped)
             collar(collar_h + step_h, 23.5 / 2);
@@ -95,6 +95,7 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
           }
         }
       };
+      /*
       font = "Open Sans:style=Bold";
       fontsize = 3.75;
       translate([0,0,-0.1]) {
@@ -107,6 +108,7 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
           }
         };
       }
+      */
     };
   };
 };
