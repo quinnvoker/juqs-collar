@@ -11,6 +11,7 @@ short_collar = [8.7, [1.6, 0.5], false];
 full_collar = [18, [4.6, 0.5], false];
 stepped_collar = [8.7, [2.6, 0.5], true];
 flush_collar = [8.7 + 5.8, [2.6, 0.5], false];
+island_collar = [8.7 + 5.8 + 1, [2.6, 0.5], false];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
@@ -24,7 +25,7 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V2.7";
+VERSION = "V2.8";
 
 CIR = "CIR";
 SQR = "SQR";
@@ -33,35 +34,7 @@ OCTR = "OCTR";
 OCTN = "OCTN";
 SQRN = "SQRN";
 
-juqs(model = OCTN, ver = VERSION, collar = flush_collar, throw_type= throw_types[2]);
-
-/*
-translate([40,0,0])
-  juqs(model = SQR, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
-translate([80,0,0])
-  juqs(model = OCT, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
-translate([0,-50,0]){
-  juqs(model = OCTR, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
-translate([40,0,0])
-    juqs(model = OCTN, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
-translate([80,0,0])
-    juqs(model = SQRN, ver = VERSION, collar = short_collar, throw_type= throw_types[0]);
-}
-translate([0,-120,0]){
-    juqs(model = CIR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-translate([40,0,0])
-  juqs(model = SQR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-translate([80,0,0])
-  juqs(model = OCT, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-translate([0,-50,0]){
-  juqs(model = OCTR, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-translate([40,0,0])
-    juqs(model = OCTN, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-translate([80,0,0])
-    juqs(model = SQRN, ver = VERSION, collar = full_collar, throw_type= throw_types[0]);
-}
-}
-*/
+juqs(model = OCTN, ver = VERSION, collar = island_collar, throw_type= throw_types[2]);
 
 module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
   throw = throw_type[0];
@@ -95,20 +68,18 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
           }
         }
       };
-      /*
       font = "Open Sans:style=Bold";
-      fontsize = 3.75;
+      fontsize = 4.2;
       translate([0,0,-0.1]) {
         mirror([1,0,0]) {
           linear_extrude(0.7){
-            translate([0, -11.75, 0])
-              text(str("JUQS ",model), font=font, size=fontsize, halign = "center");
-            translate([0, -16.75, 0])
-              text(str(throw_type[1]," ",ver), font=font, size=fontsize, halign = "center");
+            translate([0, 10.6, 0])
+              text(str("JUQS"), font=font, size=fontsize, halign = "center");
+            translate([0, -14.75, 0])
+              text(str(VERSION, " ", throw_type[1]),font=font, size=fontsize, halign = "center");
           }
         };
       }
-      */
     };
   };
 };
