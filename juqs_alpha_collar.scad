@@ -17,8 +17,8 @@ $fn = 100;
 */
 
 throw_types = [
-  [10.425, "A"],
-  [10.425 / sqrt(2 / 1.4), "AN"]
+  [10.6, "A"],
+  [10.6 / sqrt(2 / 1.4), "AN"]
 ];
 
-juqs(model = OCTN, collar = STEPPED, throw_type = throw_types[1], shaft_r = (7.2/2)/cos(180/$fn));
+juqs(model = OCTN, collar = FLAT, throw_type = throw_types[1], shaft_r = (7.2/2)/cos(180/$fn));
