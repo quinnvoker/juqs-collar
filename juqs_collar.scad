@@ -1,23 +1,17 @@
 include<round_gates.scad>;
 include<shape_gate.scad>;
 include<shapes.scad>;
+include<collar_types.scad>;
 
 $fn = 100;
 
 collar_r = 34.7/2;
-//short_collar = 8.7;
-short_collar = [8.7, [1.6, 0.5], false];
-//full_collar = 18;
-full_collar = [18, [4.6, 0.5], false];
-stepped_collar = [8.7, [2.6, 0.5], true];
-flush_collar = [8.7 + 5.8, [2.6, 0.5], false];
-island_collar = [8.7 + 5.8 + 1, [2.6, 0.5], false];
 shaft_r = (9/2)/cos(180/$fn);
 //shaft_r = 9/2;
 
 throw_types = [
-  [10, "B"],
-  [10 / sqrt(2), "S"],
+  [10, "S"],
+  [10 / sqrt(2), "SQ"],
   [10 / sqrt(2 / 1.4), "SN"]
 ];
 
@@ -25,18 +19,11 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V2.8";
+VERSION = "V2.9";
 
-CIR = "CIR";
-SQR = "SQR";
-OCT = "OCT";
-OCTR = "OCTR";
-OCTN = "OCTN";
-SQRN = "SQRN";
+juqs(model = OCTN, collar = ISLAND, throw_type= throw_types[2]);
 
-juqs(model = OCTN, ver = VERSION, collar = island_collar, throw_type= throw_types[2]);
-
-module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
+module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types[0], shaft_r = shaft_r, pivot_depth = pivot_depth) {
   throw = throw_type[0];
   collar_h = collar[0];
   bevel = collar[1];
@@ -76,7 +63,7 @@ module juqs(model, ver, collar = short_collar, throw_type = throw_types[0]) {
             translate([0, 10.6, 0])
               text(str("JUQS"), font=font, size=fontsize, halign = "center");
             translate([0, -14.75, 0])
-              text(str(VERSION, " ", throw_type[1]),font=font, size=fontsize, halign = "center");
+              text(str(ver, " ", throw_type[1]),font=font, size=fontsize, halign = "center");
           }
         };
       }
