@@ -17,8 +17,14 @@ $fn = 100;
 */
 
 throw_types = [
-  [10.6, "A"],
-  [10.6 / sqrt(2 / 1.4), "AN"]
+  [12, "A"],
+  [12 / sqrt(2 / 1.4), "AN"]
 ];
 
-juqs(model = OCTN, collar = FLAT, throw_type = throw_types[1], shaft_r = (7.2/2)/cos(180/$fn));
+juqs(model = OCTN, collar = STEPPED, throw_type = throw_types[0], shaft_r = (7.2/2)/cos(180/$fn), pivot_depth = 8.05);
+
+/*
+translate([0,0,-8.05])
+  rotate([throw_types[0][0],0,0])
+    cylinder(h=100, r=(7.2/2)/cos(180/$fn));
+*/

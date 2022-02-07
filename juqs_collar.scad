@@ -19,11 +19,13 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V2.9";
+VERSION = "V3.0";
 
-juqs(model = OCTN, collar = ISLAND, throw_type= throw_types[2]);
+hollow(OCTN, throw_types[2][0], shaft_r, pivot_depth);
 
-module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types[0], shaft_r = shaft_r, pivot_depth = pivot_depth) {
+//juqs(model = OCTN, collar = SHORT, throw_type= throw_types[2], production = true);
+
+module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types[0], shaft_r = shaft_r, pivot_depth = pivot_depth, production = false) {
   throw = throw_type[0];
   collar_h = collar[0];
   bevel = collar[1];
@@ -36,40 +38,46 @@ module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types
           base(b=0);
           collar(collar_h);
           if(stepped)
-            collar(collar_h + step_h, 23.5 / 2);
+            collar(h = collar_h + step_h, r = 23.5 / 2, bevel = production ? 0.5 : undef);
         };
-        bevels(collar_h + step_h, bevel[0], bevel[1]) {
-          translate([0,0,-pivot_depth]){
-            if(model == CIR)
-              cir_gate(throw, shaft_r);
-            if(model == SQR)
-              shape_gate(sqr_poly, throw, shaft_r);
-            if(model == OCT)
-              shape_gate(oct_poly, throw, shaft_r, 0.5);
-            if(model == OCTR)
-              octr_gate(throw, shaft_r);
-            if(model == OCTN)
-              shape_gate(octn_poly, throw, shaft_r, 0.5);
-            if(model == SQRN)
-              sqrn_gate(throw, shaft_r);
-          }
-        }
+        bevels(collar_h + step_h, bevel[0], production ? 0 : bevel[1]) {
+          hollow(model, throw, shaft_r, pivot_depth);
+       };
       };
-      font = "Open Sans:style=Bold";
-      fontsize = 4.2;
-      translate([0,0,-0.1]) {
-        mirror([1,0,0]) {
-          linear_extrude(0.7){
-            translate([0, 10.6, 0])
-              text(str("JUQS"), font=font, size=fontsize, halign = "center");
-            translate([0, -14.75, 0])
-              text(str(ver, " ", throw_type[1]),font=font, size=fontsize, halign = "center");
-          }
-        };
+      if(!production) {
+        font = "Open Sans:style=Bold";
+        fontsize = 4.2;
+        translate([0,0,-0.1]) {
+          mirror([1,0,0]) {
+            linear_extrude(0.7){
+              translate([0, 10.6, 0])
+                text(str("JUQS"), font=font, size=fontsize, halign = "center");
+              translate([0, -14.75, 0])
+                text(str(ver, " ", throw_type[1]),font=font, size=fontsize, halign = "center");
+            }
+          };
+        }
       }
     };
   };
 };
+
+module hollow(model = CIR, throw, shaft_r, pivot_depth){
+  translate([0,0,-pivot_depth]){
+    if(model == CIR)
+      cir_gate(throw, shaft_r);
+    if(model == SQR)
+      shape_gate(sqr_poly, throw, shaft_r);
+    if(model == OCT)
+      shape_gate(oct_poly, throw, shaft_r, 0.5);
+    if(model == OCTR)
+      octr_gate(throw, shaft_r);
+    if(model == OCTN)
+      shape_gate(octn_poly, throw, shaft_r, 0.5);
+    if(model == SQRN)
+      qrn_gate(throw, shaft_r);
+  }
+}
 
 module bevels(collar_height, b_size = 0.8, t_size = 0.8){
   if(b_size > 0) {

@@ -22,39 +22,36 @@ screw_hole_bevel_h = 1.8
 screw_hole_padding_lower = 1.8
 */
 
-lower();
+alpha_adaptor();
 
 module alpha_adaptor() {
-  difference(){
-    union(){
-      lower();
-      translate([0, 0, 3.6])
-        upper();
-    }
-    cylinder(h = 10, r = 35 / 2);
-    translate([0,0,7.6 - 2.8])
-      base(b = 0);
+  union(){
+    lower();
+    translate([0, 0, 3.6])
+      upper();
   }
 }
 
-module upper(h = 4, size = 59.6, r = 3.5){
+module upper(solo = false, h = 4, size = 59.6, r = 3.5){
   difference() {
     rounded_rect(h = h, size = size, r = r);
     screw_holes();
     center_hole();
     translate([0,0,h - 2.8])
       base(b = 0);
-    guide_posts();
+    if(solo)
+      guide_posts();
   }
 }
 
-module lower(h = 3.6, size = 52.6, r = 15){
+module lower(solo = false, h = 3.6, size = 52.6, r = 15){
   difference() {
     union(){
       rounded_rect(h = h, size = size, r = r);
-      guide_posts();
+      if(solo)
+        guide_posts();
     }
-    screw_holes();
+    screw_holes(r2 = 4.8/2);
     center_hole();
   }
 }
@@ -63,9 +60,9 @@ module center_hole() {
   cylinder(h = 10, r = 35 / 2);
 }
 
-module guide_posts(h = 7.6, r = 4.8 / 2) {
+module guide_posts(h = 7.6, r = 6.5 / 2) {
   rotate([0,0,45])
-    screw_holes(h = 7.6, r1 = r, r2 = r);
+    screw_holes(h = 7.6, r1 = r, r2 = r, pos = 61.8 / 2);
 }
 
 module screw_holes(h = 10, r1 = 4.8 / 2, r2 = 5.6 / 2, pos = 52.6 / 2 - 1.8){
@@ -73,22 +70,22 @@ module screw_holes(h = 10, r1 = 4.8 / 2, r2 = 5.6 / 2, pos = 52.6 / 2 - 1.8){
   chamfer_height = r2 - r1;
   translate([offset, 0, 0]){
     cylinder(h = h, r = r1);
-    translate([0, 0 , 7.6 - chamfer_height])
+    translate([0, 0 ,4 - chamfer_height])
       cylinder(h = chamfer_height, r1 = r1, r2 = r2);
   }
   translate([-offset, 0, 0]){
     cylinder(h = h, r = r1);
-    translate([0, 0 ,7.6 - chamfer_height])
+    translate([0, 0 ,4 - chamfer_height])
       cylinder(h = chamfer_height, r1 = r1, r2 = r2);
   }
   translate([0, offset, 0]){
     cylinder(h = h, r = r1);
-    translate([0, 0 ,7.6 - chamfer_height])
+    translate([0, 0 ,4 - chamfer_height])
       cylinder(h = chamfer_height, r1 = r1, r2 = r2);
   }
   translate([0, -offset, 0]){
     cylinder(h = h, r = r1);
-    translate([0, 0 ,7.6 - chamfer_height])
+    translate([0, 0 ,4 - chamfer_height])
       cylinder(h = chamfer_height, r1 = r1, r2 = r2);
   }
 }
