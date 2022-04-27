@@ -36,12 +36,15 @@ juqs(model = OCTN, collar = FULL, throw_type= throw_types[2], production = false
 /* 
   change shaft_r to match radius of shaft you wish to use. for example, a 10mm shaft:
   shaft_r = (10/2)/cos(180/$fn);
+
+  NOTE: adjusts fit and dimensions of collar to retain same throw as standard 9mm shaft.
+  if you want to increase/decrease throw, modify or add values in throw_types
 */
 shaft_r = (9/2)/cos(180/$fn);
 
 /*
   throw types are arrays with two values:
-    - the max desired cardinal throw angle (diagonal throw is dependent on gate shape)
+    - the max desired cardinal throw angle in degrees (diagonal throw is dependent on gate shape)
     - a string to use as an identifier, embossed on bottom of collar if not production mode
 */
 throw_types = [
