@@ -5,32 +5,50 @@ include<collar_types.scad>;
 
 $fn = 100;
 
+VERSION = "V3.1";
 collar_r = 34.7/2;
-shaft_r = (9/2)/cos(180/$fn);
-//shaft_r = 9/2;
+grommet_dist = 6.8; //distance the grommet sits below this component
+grommet_depth = 6.4; //thickness of grommet (when compressed)
+pivot_depth = grommet_dist + grommet_depth / 2;
 
+/*
+  Update the following line to change which kind of collar is being rendered.
+  Available model values: 
+    CIR (circle) 
+    SQR (square)
+    OCT (octagon),
+    OCTR (octagon with round notches, seimitsu octo-like)
+    OCTN (octagon with deep corners, nobi pro-like)
+    SQRN (square with cardinal notches, nobi standard-like)
+  Available collar values:
+    SHORT (standard short or "chopped" collar)
+    FULL (standard full collar)
+    STEPPED (stepped collar, like Bandit F3)
+    FLAT (flat collar, like alphas)
+    ISLAND (unique, almost-full collar. only beveled part of top protrudes when using AFS case)
+  For different throw types, change number in brackets (throw_types[x]):
+    0 ("S": Emulates full throw of standard sanjuks v6 circle gate)
+    1 ("SQ": Reduces throw for SQR model, corners will have same throw as "S" but cardinals are short)
+    2 ("SN": Similar to "SQ", but slightly larger. Tuned for OCTN model)
+*/
+juqs(model = OCTN, collar = FULL, throw_type= throw_types[2], production = false);
+
+/* 
+  change shaft_r to match radius of shaft you wish to use. for example, a 10mm shaft:
+  shaft_r = (10/2)/cos(180/$fn);
+*/
+shaft_r = (9/2)/cos(180/$fn);
+
+/*
+  throw types are arrays with two values:
+    - the max desired cardinal throw angle (diagonal throw is dependent on gate shape)
+    - a string to use as an identifier, embossed on bottom of collar if not production mode
+*/
 throw_types = [
   [10, "S"],
   [10 / sqrt(2), "SQ"],
   [10 / sqrt(2 / 1.4), "SN"]
 ];
-
-grommet_dist = 6.8; //distance the grommet sits below this component
-grommet_depth = 6.4; //thickness of grommet (when compressed)
-pivot_depth = grommet_dist + grommet_depth / 2;
-
-VERSION = "V3.1";
-
-//hollow(OCTN, throw_types[2][0], shaft_r, pivot_depth);
-
-juqs(model = OCTN, collar = FULL, throw_type= throw_types[2], production = true);
-
-/*
-color("red")
-  translate([0,0,-pivot_depth])
-    rotate([throw_types[2][0],0,0])
-      cylinder(h = 100, r = shaft_r);
-*/
 
 module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types[0], shaft_r = shaft_r, pivot_depth = pivot_depth, production = false) {
   throw = throw_type[0];
