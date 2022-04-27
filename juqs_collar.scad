@@ -19,11 +19,18 @@ grommet_dist = 6.8; //distance the grommet sits below this component
 grommet_depth = 6.4; //thickness of grommet (when compressed)
 pivot_depth = grommet_dist + grommet_depth / 2;
 
-VERSION = "V3.0";
+VERSION = "V3.1";
 
-hollow(OCTN, throw_types[2][0], shaft_r, pivot_depth);
+//hollow(OCTN, throw_types[2][0], shaft_r, pivot_depth);
 
-//juqs(model = OCTN, collar = SHORT, throw_type= throw_types[2], production = true);
+juqs(model = OCTN, collar = FULL, throw_type= throw_types[2], production = true);
+
+/*
+color("red")
+  translate([0,0,-pivot_depth])
+    rotate([throw_types[2][0],0,0])
+      cylinder(h = 100, r = shaft_r);
+*/
 
 module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types[0], shaft_r = shaft_r, pivot_depth = pivot_depth, production = false) {
   throw = throw_type[0];
@@ -38,10 +45,10 @@ module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types
           base(b=0);
           collar(collar_h);
           if(stepped)
-            collar(h = collar_h + step_h, r = 23.5 / 2, bevel = production ? 0.5 : undef);
+            collar(h = collar_h + step_h, r = 23.5 / 2, bevel =0.5);
         };
-        bevels(collar_h + step_h, bevel[0], production ? 0 : bevel[1]) {
-          hollow(model, throw, shaft_r, pivot_depth);
+        inner_bevel(collar_h + step_h, bevel[1]) {
+          hollow(model, throw, shaft_r, pivot_depth, collar_h + step_h, bevel);
        };
       };
       if(!production) {
@@ -62,31 +69,24 @@ module juqs(model = CIR, ver = VERSION, collar = SHORT, throw_type = throw_types
   };
 };
 
-module hollow(model = CIR, throw, shaft_r, pivot_depth){
+module hollow(model = CIR, throw, shaft_r, pivot_depth, collar_h, bevel){
   translate([0,0,-pivot_depth]){
     if(model == CIR)
       cir_gate(throw, shaft_r);
     if(model == SQR)
-      shape_gate(sqr_poly, throw, shaft_r);
+      shape_gate(sqr_poly, throw, shaft_r, 0, collar_h, pivot_depth, bevel);
     if(model == OCT)
-      shape_gate(oct_poly, throw, shaft_r, 0.5);
+      shape_gate(oct_poly, throw, shaft_r, 0.5, collar_h, pivot_depth, bevel);
     if(model == OCTR)
       octr_gate(throw, shaft_r);
     if(model == OCTN)
-      shape_gate(octn_poly, throw, shaft_r, 0.5);
+      shape_gate(octn_poly, throw, shaft_r, 0.5, collar_h, pivot_depth, bevel);
     if(model == SQRN)
       qrn_gate(throw, shaft_r);
   }
 }
 
-module bevels(collar_height, b_size = 0.8, t_size = 0.8){
-  if(b_size > 0) {
-    translate([0,0,-0.1])
-      linear_extrude(b_size + 0.1) 
-        projection(cut = true)
-          translate([0,0,-b_size])
-            children();
-  }
+module inner_bevel(collar_height, t_size = 0.8){
   if(t_size > 0) {
     translate([0,0,collar_height - t_size])
       linear_extrude(height = t_size + 0.1, scale = 1 + 0.125 * (t_size + 0.1))
